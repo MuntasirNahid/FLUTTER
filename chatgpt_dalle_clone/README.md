@@ -1,16 +1,14 @@
-# chatgpt_dalle
+# ChatGpt And DallE Clone
 
-A new Flutter project.
 
-## Getting Started
+In this project, I learned how to handle:
+voice command,
+speech to text,
+text to speech,
+open API
+in flutter project.
 
-This project is a starting point for a Flutter application.
+Video Presentation:
 
-A few resources to get you started if this is your first Flutter project:
+https://github.com/MuntasirNahid/FLUTTER/assets/69505101/f55a6e31-a377-496e-9592-bd906073d2d2
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
