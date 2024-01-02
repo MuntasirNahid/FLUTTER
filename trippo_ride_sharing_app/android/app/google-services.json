@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "382787202355",
+    "project_id": "trippo-19e3e",
+    "storage_bucket": "trippo-19e3e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382787202355:android:d94a6157bb6fd9ab1f6246",
+        "android_client_info": {
+          "package_name": "com.example.trippo_ride_sharing_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsOWOumpCQ5qYKF3DYGYlcB4DV1u6Z3BU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
