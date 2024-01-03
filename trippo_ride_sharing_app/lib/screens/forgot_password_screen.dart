@@ -3,45 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:trippo_ride_sharing_app/global/global.dart';
-import 'package:trippo_ride_sharing_app/screens/forgot_password_screen.dart';
-import 'package:trippo_ride_sharing_app/screens/main_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final emailEditingController = TextEditingController();
-  final passwordEditingController = TextEditingController();
-
-  bool _isPasswordVisible = false;
 
   //declare  a global key
   final _formKey = GlobalKey<FormState>();
 
-  void _submit() async {
-    //validate all the form fields
-    if (_formKey.currentState!.validate()) {
-      await firebaseAuth
-          .signInWithEmailAndPassword(
-        email: emailEditingController.text.trim(),
-        password: passwordEditingController.text.trim(),
-      )
-          .then((auth) async {
-        currentUser = auth.user;
-
-        await Fluttertoast.showToast(msg: "Successfully Logged In");
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const MainScreen()));
-      }).catchError((errorMessage) {
-        Fluttertoast.showToast(msg: "Error Occured:\n $errorMessage");
-      });
-    } else {
-      Fluttertoast.showToast(msg: "Not all fields are valid, PLease recheck");
-    }
+  void _submit() {
+    firebaseAuth
+        .sendPasswordResetEmail(email: emailEditingController.text.trim())
+        .then((value) {
+      Fluttertoast.showToast(
+          msg: 'We have sent an recovery link to your email.Please Check');
+    }).onError((error, stackTrace) {
+      Fluttertoast.showToast(
+          msg: 'Something errpr Occured: \n ${error.toString()}');
+    });
   }
 
   @override
@@ -62,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   darkTheme ? 'images/city_dark.png' : 'images/city.png',
                 ),
                 Text(
-                  'Login',
+                  'Please Enter your Email',
                   style: TextStyle(
                     color: darkTheme ? Colors.blue : Colors.black,
                     fontSize: 25,
@@ -135,69 +120,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 10,
                             ),
 
-                            TextFormField(
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(50),
-                              ],
-                              obscureText: !_isPasswordVisible,
-                              decoration: InputDecoration(
-                                hintText: 'Password',
-                                hintStyle: const TextStyle(
-                                  color: Colors.grey,
-                                ),
-                                filled: true,
-                                fillColor: darkTheme
-                                    ? Colors.black45
-                                    : Colors.grey.shade200,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                    width: 0,
-                                    style: BorderStyle.none,
-                                  ),
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.lock,
-                                  color: darkTheme
-                                      ? Colors.amber.shade400
-                                      : Colors.grey,
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: _isPasswordVisible
-                                      ? Icon(Icons.visibility)
-                                      : Icon(Icons.visibility_off),
-                                  color: darkTheme
-                                      ? Colors.amber.shade400
-                                      : Colors.grey,
-                                  onPressed: () {
-                                    setState(() {
-                                      _isPasswordVisible = !_isPasswordVisible;
-                                    });
-                                  },
-                                ),
-                              ),
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (text) {
-                                if (text == null || text.isEmpty) {
-                                  return 'Password can\'t be empty';
-                                }
-                                if (text.length < 6) {
-                                  return 'Password Length should be greater than 6 ';
-                                }
-                                if (text.length > 49) {
-                                  return 'Password Cant\'t be more than 50 character';
-                                }
-                                return null;
-                              },
-                              onChanged: (text) {
-                                setState(() {
-                                  passwordEditingController.text = text;
-                                });
-                              },
-                            ),
-
-                            const SizedBox(height: 15),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(double.infinity, 50),
@@ -214,33 +136,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _submit();
                               },
                               child: const Text(
-                                'Login',
+                                'Send Recovery Link',
                                 style: TextStyle(fontSize: 20),
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ForgotPasswordScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  'Forgot Password?',
-                                  style: TextStyle(
-                                    color: darkTheme
-                                        ? Colors.amber.shade400
-                                        : Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
+
                             const SizedBox(height: 10),
 
                             Row(

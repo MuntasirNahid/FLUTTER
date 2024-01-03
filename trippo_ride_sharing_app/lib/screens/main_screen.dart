@@ -10,6 +10,13 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+      body: Center(
+        child: Text(
+          'Hello',
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    );
   }
 }
