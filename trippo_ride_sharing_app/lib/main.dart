@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:trippo_ride_sharing_app/screens/login_screen.dart';
+import 'package:trippo_ride_sharing_app/splash_screen/splash_screen.dart';
 import 'package:trippo_ride_sharing_app/theme_provider/theme_provider.dart';
 
 Future<void> main() async {
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,
       debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

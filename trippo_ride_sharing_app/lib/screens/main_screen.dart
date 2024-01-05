@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geocoder2/geocoder2.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
+import 'package:trippo_ride_sharing_app/Assistants/assistant_method.dart';
+import 'package:trippo_ride_sharing_app/global/map_key.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,6 +21,8 @@ class _MainScreenState extends State<MainScreen> {
   String? _address;
 
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
+
+  GoogleMapController? newGoogleMapController;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -41,8 +46,8 @@ class _MainScreenState extends State<MainScreen> {
   List<LatLng> pLineCoordinatedList = [];
   Set<Polyline> polyLineSet = {};
 
-  Set<Marker> markerSet = {};
-  Set<Circle> circleSet = {};
+  Set<Marker> markersSet = {};
+  Set<Circle> circlesSet = {};
 
   String userName = "";
   String userEmail = "";
@@ -52,13 +57,125 @@ class _MainScreenState extends State<MainScreen> {
 
   BitmapDescriptor? activeNearbyIcon;
 
+  locateUserPosition() async {
+    Position cPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    userCurrentPosition = cPosition;
+
+    LatLng latLngPosition =
+        LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
+    CameraPosition cameraPosition =
+        CameraPosition(target: latLngPosition, zoom: 15);
+
+    newGoogleMapController!
+        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+    String humanReadableAddress =
+        await AssistantMethods.searchAddressForGeographicCoOrdinates(
+      userCurrentPosition!,
+      context,
+    );
+    print("This is our address = " + humanReadableAddress);
+  }
+
+  getAddressFromLatLng() async {
+    try {
+      GeoData data = await Geocoder2.getDataFromCoordinates(
+        latitude: pickLocation!.latitude,
+        longitude: pickLocation!.longitude,
+        googleMapApiKey: mapKey,
+      );
+
+      setState(() {
+        _address = data.address;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  checkIfLocationPermissionAllowed() async {
+    _locationPermission = await Geolocator.requestPermission();
+
+    if (_locationPermission == LocationPermission.denied) {
+      _locationPermission = await Geolocator.requestPermission();
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    checkIfLocationPermissionAllowed();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Hello',
-          style: TextStyle(color: Colors.black),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            GoogleMap(
+              initialCameraPosition: _kGooglePlex,
+              mapType: MapType.normal,
+              myLocationEnabled: true,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: true,
+              polylines: polyLineSet,
+              markers: markersSet,
+              circles: circlesSet,
+              onMapCreated: (GoogleMapController controller) {
+                _controllerGoogleMap.complete(controller);
+                newGoogleMapController = controller;
+
+                setState(() {});
+
+                locateUserPosition();
+              },
+              onCameraMove: (CameraPosition? position) {
+                if (pickLocation != position!.target) {
+                  setState(() {
+                    pickLocation = position.target;
+                  });
+                }
+              },
+              onCameraIdle: () {
+                getAddressFromLatLng();
+              },
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 35),
+                child: Image.asset(
+                  "images/pick.png",
+                  height: 45,
+                  width: 45,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 40,
+              right: 20,
+              left: 20,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                  color: Colors.white,
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  _address ?? "Set your pickup Location",
+                  overflow: TextOverflow.visible,
+                  softWrap: true,
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
