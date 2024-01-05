@@ -51,7 +51,10 @@ dependencies:
   location:
   url_launcher:
   smooth_star_rating_nsafe:
-  animated_text_kit: 
+  animated_text_kit:
+
+
+  geocoding:
 
 
 dev_dependencies:

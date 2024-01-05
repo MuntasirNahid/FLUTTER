@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:geocoder2/geocoder2.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
-import 'package:trippo_ride_sharing_app/Assistants/assistant_method.dart';
-import 'package:trippo_ride_sharing_app/global/map_key.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -19,6 +17,10 @@ class _MainScreenState extends State<MainScreen> {
   LatLng? pickLocation;
   loc.Location location = loc.Location();
   String? _address;
+
+  //extra added :
+  Position? _currentPosition;
+  String? _currentAddress;
 
   final Completer<GoogleMapController> _controllerGoogleMap = Completer();
 
@@ -64,35 +66,51 @@ class _MainScreenState extends State<MainScreen> {
 
     LatLng latLngPosition =
         LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
+
     CameraPosition cameraPosition =
         CameraPosition(target: latLngPosition, zoom: 15);
 
     newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
-    String humanReadableAddress =
-        await AssistantMethods.searchAddressForGeographicCoOrdinates(
-      userCurrentPosition!,
-      context,
-    );
-    print("This is our address = " + humanReadableAddress);
+    //   String humanReadableAddress =
+    //       await AssistantMethods.searchAddressForGeographicCoOrdinates(
+    //     userCurrentPosition!,
+    //     context,
+    //   );
+    //   print("This is our address = " + humanReadableAddress);
+
+    _getAddressFromLatLng();
   }
 
-  getAddressFromLatLng() async {
-    try {
-      GeoData data = await Geocoder2.getDataFromCoordinates(
-        latitude: pickLocation!.latitude,
-        longitude: pickLocation!.longitude,
-        googleMapApiKey: mapKey,
-      );
-
+  Future<void> _getAddressFromLatLng() async {
+    await placemarkFromCoordinates(
+            pickLocation!.latitude, pickLocation!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
       setState(() {
-        _address = data.address;
+        _currentAddress =
+            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
       });
-    } catch (e) {
-      print(e);
-    }
+    }).catchError((e) {
+      debugPrint(e);
+    });
   }
+  // getAddressFromLatLng() async {
+  //   try {
+  //     GeoData data = await Geocoder2.getDataFromCoordinates(
+  //       latitude: pickLocation!.latitude,
+  //       longitude: pickLocation!.longitude,
+  //       googleMapApiKey: mapKey,
+  //     );
+  //
+  //     setState(() {
+  //       _address = data.address;
+  //     });
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   checkIfLocationPermissionAllowed() async {
     _locationPermission = await Geolocator.requestPermission();
@@ -144,7 +162,7 @@ class _MainScreenState extends State<MainScreen> {
                 }
               },
               onCameraIdle: () {
-                getAddressFromLatLng();
+                _getAddressFromLatLng();
               },
             ),
             Align(
@@ -169,9 +187,11 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  _address ?? "Set your pickup Location",
+                  // _address ?? "Set your pickup Location",
+                  "$userCurrentPosition!.latitude, $userCurrentPosition!.longitude  Address =$_currentAddress ",
                   overflow: TextOverflow.visible,
                   softWrap: true,
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             )
