@@ -5,6 +5,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
+import 'package:trippo_ride_sharing_app/global/global.dart';
+import 'package:trippo_ride_sharing_app/models/directions.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -81,6 +83,12 @@ class _MainScreenState extends State<MainScreen> {
     //   print("This is our address = " + humanReadableAddress);
 
     _getAddressFromLatLng();
+
+    userName = userModelCurrentInfo!.name!;
+    userEmail = userModelCurrentInfo!.email!;
+
+    // initializeGeoFireListener();
+    // AssistantMethods.readTripsKeysForOnlineUser(context);
   }
 
   Future<void> _getAddressFromLatLng() async {
@@ -92,6 +100,12 @@ class _MainScreenState extends State<MainScreen> {
         _currentAddress =
             '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
       });
+
+      Directions? userPickupAddress = Directions();
+
+      userPickupAddress.locationLatitude = pickLocation!.latitude;
+      userPickupAddress.locationLongitude = pickLocation!.longitude;
+      userPickupAddress.locationName = _currentAddress;
     }).catchError((e) {
       debugPrint(e);
     });

@@ -55,6 +55,7 @@ dependencies:
 
 
   geocoding:
+  provider:
 
 
 dev_dependencies:
