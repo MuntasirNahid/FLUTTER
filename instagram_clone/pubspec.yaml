@@ -40,6 +40,7 @@ dependencies:
   firebase_auth:
   firebase_storage:
   flutter_svg:
+  image_picker:
 
 dev_dependencies:
   flutter_test:
