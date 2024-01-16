@@ -21,14 +21,11 @@ class StorageMethods {
     //completing upload task
     TaskSnapshot snap = await uploadTask;
 
-    //final snapshot = await uploadTask.whenComplete(() => null);
-
     //Getting picture url for further use
     await ref.putData(file);
     //
     String downloadUrl = await snap.ref.getDownloadURL();
 
-    // String downloadUrl = await snapshot.ref.getDownloadURL();
     print('File Uploaded: $downloadUrl');
     return downloadUrl;
   }

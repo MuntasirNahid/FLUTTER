@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:instagram_clone/resources/auth_methods.dart';
+import 'package:instagram_clone/responsive/mobile_screen_layout.dart';
+import 'package:instagram_clone/responsive/responsive_layout_screen.dart';
+import 'package:instagram_clone/responsive/web_screen_layout.dart';
 import 'package:instagram_clone/screens/signup_screen.dart';
 import 'package:instagram_clone/utills/colors.dart';
 import 'package:instagram_clone/utills/dimensions.dart';
+import 'package:instagram_clone/utills/utills.dart';
 import 'package:instagram_clone/widgets/text_field_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,37 +28,32 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
   }
-  //
-  // void loginUser() async {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   String res = await AuthMethods().loginUser(
-  //       email: _emailController.text, password: _passwordController.text);
-  //   if (res == 'success') {
-  //     if (context.mounted) {
-  //       Navigator.of(context).pushAndRemoveUntil(
-  //           MaterialPageRoute(
-  //             builder: (context) => const ResponsiveLayout(
-  //               mobileScreenLayout: MobileScreenLayout(),
-  //               webScreenLayout: WebScreenLayout(),
-  //             ),
-  //           ),
-  //               (route) => false);
-  //
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-  //     }
-  //   } else {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //     if (context.mounted) {
-  //       showSnackBar(context, res);
-  //     }
-  //   }
-  // }
+
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().loginUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+
+    if (res == 'success') {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+            webScreenLayout: WebScreenLayout(),
+            mobileScreenLayout: MobileScreenLayout(),
+          ),
+        ),
+      );
+    } else {
+      showSnackBar(res, context);
+    }
+    setState(() {
+      _isLoading = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 24,
               ),
               InkWell(
-                //  onTap: loginUser,
+                onTap: loginUser,
                 child: Container(
                   width: double.infinity,
                   alignment: Alignment.center,
