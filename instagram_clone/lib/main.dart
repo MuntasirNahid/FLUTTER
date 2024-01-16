@@ -11,9 +11,9 @@ Future<void> main() async {
         options: const FirebaseOptions(
       apiKey: "AIzaSyC31kUH0kBNxx-FXDoRWHA7CZ3nG7cZsk8",
       projectId: "instagram-clone-1f9f1",
-      storageBucket: "instagram-clone-1f9f1.appspot.com",
       messagingSenderId: "685024612637",
       appId: "1:685024612637:web:c852f2268a51c3fe3d11f4",
+      storageBucket: "instagram-clone-1f9f1.appspot.com",
     ));
   } else {
     await Firebase.initializeApp(
@@ -22,6 +22,7 @@ Future<void> main() async {
         appId: "1:685024612637:android:e6ba8af6116d712b3d11f4",
         messagingSenderId: "685024612637",
         projectId: "instagram-clone-1f9f1",
+        storageBucket: "instagram-clone-1f9f1.appspot.com",
       ),
     );
   }

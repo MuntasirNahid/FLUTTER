@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram_clone/resources/auth_methods.dart';
 import 'package:instagram_clone/screens/login_screen.dart';
 import 'package:instagram_clone/utills/colors.dart';
 import 'package:instagram_clone/utills/utills.dart';
@@ -23,6 +24,28 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _isLoading = false;
 
   Uint8List? _image;
+
+  void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      bio: _bioController.text,
+      file: _image!,
+    );
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (res != 'success') {
+      showSnackBar(res, context);
+    } else {
+      showSnackBar('Successfully Signup Completed', context);
+    }
+  }
 
   void selectImage() async {
     Uint8List im = await pickImage(ImageSource.gallery);
@@ -126,6 +149,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 24,
               ),
               InkWell(
+                onTap: signUpUser,
                 child: Container(
                   width: double.infinity,
                   alignment: Alignment.center,
