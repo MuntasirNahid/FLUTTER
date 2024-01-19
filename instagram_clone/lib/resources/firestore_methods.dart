@@ -17,7 +17,7 @@ class FirestoreMethods {
     String username,
     String profImage,
   ) async {
-    String res = "some error occured";
+    String res = "some error occurred";
 
     try {
       String photoUrl =
