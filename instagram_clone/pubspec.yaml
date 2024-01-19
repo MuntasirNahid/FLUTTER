@@ -41,7 +41,8 @@ dependencies:
   firebase_storage:
   flutter_svg:
   image_picker:
-  provider: 
+  provider:
+  uuid:
 
 dev_dependencies:
   flutter_test:
