@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/providers/user_provider.dart';
+import 'package:instagram_clone/resources/firestore_methods.dart';
+import 'package:instagram_clone/screens/comment_screen.dart';
 import 'package:instagram_clone/utills/colors.dart';
 import 'package:instagram_clone/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
@@ -87,12 +89,17 @@ class _PostCardState extends State<PostCard> {
 
           //Image Section
           GestureDetector(
-            onDoubleTap: () {
+            onDoubleTap: () async {
+              await FirestoreMethods().likePost(
+                widget.snap['postId'],
+                user.uid,
+                widget.snap['likes'],
+              );
               setState(() {
                 isLikeAnimating = true;
               });
               // Delay for 600 milliseconds and reset isLikeAnimating
-              Future.delayed(const Duration(milliseconds: 600), () {
+              Future.delayed(const Duration(milliseconds: 200), () {
                 setState(() {
                   isLikeAnimating = false;
                 });
@@ -116,7 +123,7 @@ class _PostCardState extends State<PostCard> {
                   child: LikeAnimation(
                     child: const Icon(
                       Icons.favorite,
-                      color: Colors.red,
+                      color: Colors.white,
                       size: 120,
                     ),
                     isAnimating: isLikeAnimating,
@@ -143,15 +150,33 @@ class _PostCardState extends State<PostCard> {
                 isAnimating: widget.snap['likes'].contains(user.uid),
                 smallLike: true,
                 child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  ),
+                  onPressed: () async {
+                    await FirestoreMethods().likePost(
+                      widget.snap['postId'],
+                      user.uid,
+                      widget.snap['likes'],
+                    );
+                  },
+                  icon: widget.snap['likes'].contains(user.uid)
+                      ? const Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        )
+                      : const Icon(
+                          Icons.favorite_border_outlined,
+                        ),
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () async {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return CommentScreen();
+                      },
+                    ),
+                  );
+                },
                 icon: const Icon(
                   Icons.comment_outlined,
                 ),
