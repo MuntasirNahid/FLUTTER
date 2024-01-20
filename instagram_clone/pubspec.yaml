@@ -43,6 +43,7 @@ dependencies:
   image_picker:
   provider:
   uuid:
+  intl:
 
 dev_dependencies:
   flutter_test:
