@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class CommentCard extends StatelessWidget {
+class CommentCard extends StatefulWidget {
+  final snap;
+
   const CommentCard({
     Key? key,
+    required this.snap,
   }) : super(key: key);
 
+  @override
+  State<CommentCard> createState() => _CommentCardState();
+}
+
+class _CommentCardState extends State<CommentCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -13,7 +22,8 @@ class CommentCard extends StatelessWidget {
         children: [
           CircleAvatar(
             backgroundImage: NetworkImage(
-              'https://images.unsplash.com/photo-1557862921-37829c790f19?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFufGVufDB8fDB8fHww',
+              widget.snap['profilePic'],
+              //'https://images.unsplash.com/photo-1557862921-37829c790f19?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFufGVufDB8fDB8fHww',
             ),
             radius: 18,
           ),
@@ -28,13 +38,13 @@ class CommentCard extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'username',
+                          text: widget.snap['name'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextSpan(
-                          text: ' This is a comment',
+                          text: ' ${widget.snap['text']}',
                         ),
                       ],
                     ),
@@ -42,7 +52,9 @@ class CommentCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      '20/01/2024',
+                      DateFormat.yMMMMd().format(
+                        widget.snap['datePublished'].toDate(),
+                      ),
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,

@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/providers/user_provider.dart';
 import 'package:instagram_clone/resources/firestore_methods.dart';
 import 'package:instagram_clone/screens/comment_screen.dart';
 import 'package:instagram_clone/utills/colors.dart';
+import 'package:instagram_clone/utills/utills.dart';
 import 'package:instagram_clone/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +19,30 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
+  int commentLen = 0;
+
   bool isLikeAnimating = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+      commentLen = snap.docs.length;
+    } catch (err) {
+      showSnackBar(err.toString(), context);
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final UserModel user = Provider.of<UserProvider>(context).getUser;
@@ -172,7 +197,9 @@ class _PostCardState extends State<PostCard> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
-                        return CommentScreen();
+                        return CommentScreen(
+                          snap: widget.snap,
+                        );
                       },
                     ),
                   );
@@ -239,14 +266,24 @@ class _PostCardState extends State<PostCard> {
                 InkWell(
                   child: Container(
                     child: Text(
-                      'View all 34 comments',
+                      'View all $commentLen comments',
                       style: const TextStyle(
                         fontSize: 16,
                         color: secondaryColor,
                       ),
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return CommentScreen(
+                            snap: widget.snap,
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
                 Text(
                   DateFormat.yMMMMd().format(
