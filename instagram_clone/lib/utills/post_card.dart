@@ -5,6 +5,7 @@ import 'package:instagram_clone/providers/user_provider.dart';
 import 'package:instagram_clone/resources/firestore_methods.dart';
 import 'package:instagram_clone/screens/comment_screen.dart';
 import 'package:instagram_clone/utills/colors.dart';
+import 'package:instagram_clone/utills/global_variables.dart';
 import 'package:instagram_clone/utills/utills.dart';
 import 'package:instagram_clone/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
@@ -45,9 +46,16 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     final UserModel user = Provider.of<UserProvider>(context).getUser;
     return Container(
-      color: mobileBackgroundColor,
+      decoration: BoxDecoration(
+          border: Border.all(
+            color:
+                width > webScreenSize ? secondaryColor : mobileBackgroundColor,
+          ),
+          color: mobileBackgroundColor),
       padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
       child: Column(
         children: [
