@@ -26,7 +26,7 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   addData() async {
     UserProvider _userProvider = Provider.of(context,
         listen:
-            false); //if listen = true then it will continuously listen, but we dont want it in this case
+            false); //if listen = true then it will continuously listen, but we don't want it in this case
 
     await _userProvider.refreshUser();
   }

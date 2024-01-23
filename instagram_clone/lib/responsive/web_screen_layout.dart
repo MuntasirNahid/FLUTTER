@@ -33,7 +33,6 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
   }
 
   void navigationTapped(int page) {
-    //Animating Page
     pageController.jumpToPage(page);
     setState(() {
       _page = page;

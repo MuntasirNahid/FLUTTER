@@ -39,7 +39,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -54,12 +53,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.dark().copyWith(
           scaffoldBackgroundColor: mobileBackgroundColor,
         ),
-        // home: const LoginScreen(),
-        // home: const ResponsiveLayout (
-        //   webScreenLayout: WebScreenLayout(),
-        //   mobileScreenLayout: MobileScreenLayout(),
-        // ),
-
+        //To run in Web: flutter run -d web-server --web-renderer html
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
