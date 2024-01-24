@@ -1,13 +1,15 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:instagram_clone/models/message.dart';
 import 'package:instagram_clone/models/post.dart';
 import 'package:instagram_clone/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
 
 class FirestoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   //upload a post
 
   Future<String> uploadPost(
@@ -125,5 +127,51 @@ class FirestoreMethods {
     } catch (err) {
       print(err.toString());
     }
+  }
+
+  //Send Message
+  Future<void> sendMessage(String receiverId, String message) async {
+    //current user ifo
+    final String currentUserId = firebaseAuth.currentUser!.uid;
+    final Timestamp timestamp = Timestamp.now();
+
+    Message newMessage = Message(
+      senderId: currentUserId,
+      receiverId: receiverId,
+      message: message,
+      timestamp: timestamp,
+    );
+
+    //constructing chat room
+    List<String> ids = [currentUserId, receiverId];
+    //soring to keep unique id
+    ids.sort();
+
+    //creating a chatroom
+
+    String chatRoomId = ids.join("_");
+
+    //storing in db
+    await _firestore
+        .collection('chat_room')
+        .doc(chatRoomId)
+        .collection('messages')
+        .add(
+          newMessage.toMap(),
+        );
+  }
+
+  //Get Message
+  Stream<QuerySnapshot> getMessages(String userId, String otherUserId) {
+    List<String> ids = [userId, otherUserId];
+    ids.sort();
+    String chatRoomId = ids.join("_");
+
+    return _firestore
+        .collection('chat_room')
+        .doc(chatRoomId)
+        .collection('messages')
+        .orderBy('timestamp', descending: false)
+        .snapshots();
   }
 }

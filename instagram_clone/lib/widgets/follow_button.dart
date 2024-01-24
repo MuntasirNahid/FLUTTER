@@ -30,7 +30,7 @@ class FollowButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
           ),
           alignment: Alignment.center,
-          width: 250,
+          width: MediaQuery.of(context).size.width * 0.27,
           height: 27,
           child: Text(
             text,

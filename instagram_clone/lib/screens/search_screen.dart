@@ -31,8 +31,8 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: mobileBackgroundColor,
         title: TextFormField(
           controller: searchController,
-          decoration: InputDecoration(
-            label: const Text('Search an username'),
+          decoration: const InputDecoration(
+            label: Text('Search an username'),
           ),
           onFieldSubmitted: (String _) {
             setState(() {
@@ -45,7 +45,8 @@ class _SearchScreenState extends State<SearchScreen> {
           ? FutureBuilder(
               future: FirebaseFirestore.instance
                   .collection('users')
-                  .where('username', isGreaterThanOrEqualTo: searchController)
+                  .where('username',
+                      isGreaterThanOrEqualTo: searchController.text)
                   .get(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -54,34 +55,39 @@ class _SearchScreenState extends State<SearchScreen> {
                   );
                 }
                 return ListView.builder(
-                    itemCount: (snapshot.data! as dynamic).docs.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return ProfileScreen(
-                                uid: (snapshot.data! as dynamic).docs[index]
-                                    ['uid'],
-                              );
-                            },
-                          ),
+                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ProfileScreen(
+                              uid: (snapshot.data! as dynamic).docs[index]
+                                  ['uid'],
+                            );
+                          },
                         ),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              (snapshot.data! as dynamic).docs[index]
-                                  ['photoUrl'],
-                            ),
+                      ),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            (snapshot.data! as dynamic).docs[index]['photoUrl'],
                           ),
-                          title: (snapshot.data! as dynamic).docs[index]
-                              ['username'],
+                          radius: 16,
                         ),
-                      );
-                    });
-              })
+                        title: (snapshot.data! as dynamic).docs[index]
+                            ['username'],
+                      ),
+                    );
+                  },
+                );
+              },
+            )
           : FutureBuilder(
-              future: FirebaseFirestore.instance.collection('posts').get(),
+              future: FirebaseFirestore.instance
+                  .collection('posts')
+                  .orderBy('datePublished')
+                  .get(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(

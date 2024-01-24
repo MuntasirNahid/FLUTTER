@@ -6,14 +6,16 @@ import 'package:instagram_clone/screens/profile_screen.dart';
 import 'package:instagram_clone/screens/search_screen.dart';
 
 const webScreenSize = 600;
-
 final homeScreenItems = [
   FeedScreen(),
   SearchScreen(),
   AddPostScreen(),
-  Text('Notification'),
+  const Center(
+    child: Text('Notification section will be implemented soon'),
+  ),
   ProfileScreen(
-    //uid: FirebaseAuth.instance.currentUser!.uid,
+    //
+
     uid: FirebaseAuth.instance.currentUser!.uid,
   ),
 ];

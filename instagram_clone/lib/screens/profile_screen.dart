@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/resources/auth_methods.dart';
 import 'package:instagram_clone/resources/firestore_methods.dart';
+import 'package:instagram_clone/screens/chat_screen.dart';
 import 'package:instagram_clone/screens/login_screen.dart';
 import 'package:instagram_clone/utills/colors.dart';
 import 'package:instagram_clone/utills/utills.dart';
@@ -94,6 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             radius: 40,
                           ),
+                          //Text('${widget.uid}'),
                           Expanded(
                             flex: 1,
                             child: Column(
@@ -109,69 +111,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ],
                                 ),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  // mainAxisAlignment:
+                                  //     MainAxisAlignment.spaceAround,
                                   children: [
                                     FirebaseAuth.instance.currentUser!.uid ==
                                             widget.uid
-                                        ? FollowButton(
-                                            text: 'Sign Out',
-                                            backgroundColor:
-                                                mobileBackgroundColor,
-                                            textColor: primaryColor,
-                                            borderColor: Colors.grey,
-                                            function: () async {
-                                              await AuthMethods().signOut();
-                                              Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const LoginScreen(),
-                                                ),
-                                              );
-                                            },
-                                            //flutter run -d chrome --web-renderer html
-                                          )
-                                        : isFollowing
-                                            ? FollowButton(
-                                                text: 'Unfollow',
-                                                backgroundColor: Colors.white,
-                                                textColor: Colors.black,
+                                        ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              FollowButton(
+                                                text: 'Sign Out',
+                                                backgroundColor:
+                                                    mobileBackgroundColor,
+                                                textColor: primaryColor,
                                                 borderColor: Colors.grey,
                                                 function: () async {
-                                                  await FirestoreMethods()
-                                                      .followUser(
-                                                    FirebaseAuth.instance
-                                                        .currentUser!.uid,
-                                                    userData['uid'],
+                                                  await AuthMethods().signOut();
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const LoginScreen(),
+                                                    ),
                                                   );
-
-                                                  //doing this because we are using future builder which is one time read. so to change state we are using set state
-                                                  //if we used stream builder then it would change automatically
-                                                  setState(() {
-                                                    isFollowing = false;
-                                                    followers--;
-                                                  });
                                                 },
-                                              )
-                                            : FollowButton(
-                                                text: 'Follow',
+                                                //flutter run -d chrome --web-renderer html
+                                              ),
+                                              FollowButton(
+                                                text: 'Edit Profile',
+                                                backgroundColor:
+                                                    mobileBackgroundColor,
+                                                textColor: primaryColor,
+                                                borderColor: Colors.grey,
+                                                function: () {},
+                                                //flutter run -d chrome --web-renderer html
+                                              ),
+                                            ],
+                                          )
+                                        : Row(
+                                            children: [
+                                              isFollowing
+                                                  ? FollowButton(
+                                                      text: 'Unfollow',
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      textColor: Colors.black,
+                                                      borderColor: Colors.grey,
+                                                      function: () async {
+                                                        await FirestoreMethods()
+                                                            .followUser(
+                                                          FirebaseAuth.instance
+                                                              .currentUser!.uid,
+                                                          userData['uid'],
+                                                        );
+
+                                                        //doing this because we are using future builder which is one time read. so to change state we are using set state
+                                                        //if we used stream builder then it would change automatically
+                                                        setState(() {
+                                                          isFollowing = false;
+                                                          followers--;
+                                                        });
+                                                      },
+                                                    )
+                                                  : FollowButton(
+                                                      text: 'Follow',
+                                                      backgroundColor:
+                                                          Colors.blue,
+                                                      textColor: Colors.white,
+                                                      borderColor: Colors.blue,
+                                                      function: () async {
+                                                        await FirestoreMethods()
+                                                            .followUser(
+                                                          FirebaseAuth.instance
+                                                              .currentUser!.uid,
+                                                          userData['uid'],
+                                                        );
+                                                        setState(() {
+                                                          isFollowing = true;
+                                                          followers++;
+                                                        });
+                                                      },
+                                                    ),
+                                              FollowButton(
+                                                text: 'Message',
                                                 backgroundColor: Colors.blue,
                                                 textColor: Colors.white,
                                                 borderColor: Colors.blue,
                                                 function: () async {
-                                                  await FirestoreMethods()
-                                                      .followUser(
-                                                    FirebaseAuth.instance
-                                                        .currentUser!.uid,
-                                                    userData['uid'],
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ChatScreen(
+                                                        receiverId: widget.uid,
+                                                      ),
+                                                    ),
                                                   );
-                                                  setState(() {
-                                                    isFollowing = true;
-                                                    followers++;
-                                                  });
                                                 },
-                                              )
+                                              ),
+                                            ],
+                                          )
                                   ],
                                 ),
                               ],
