@@ -6,7 +6,7 @@ import 'package:instagram_clone/utills/colors.dart';
 import 'package:instagram_clone/utills/global_variables.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  const SearchScreen({Key? key}) : super(key: key);
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -15,39 +15,35 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController searchController = TextEditingController();
   bool isShowUsers = false;
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    searchController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
-        title: TextFormField(
-          controller: searchController,
-          decoration: const InputDecoration(
-            label: Text('Search an username'),
+        title: Form(
+          child: TextFormField(
+            controller: searchController,
+            decoration:
+                const InputDecoration(labelText: 'Search for a user...'),
+            onChanged: (value) {
+              setState(() {
+                isShowUsers = value.isNotEmpty;
+              });
+            },
           ),
-          onFieldSubmitted: (String _) {
-            setState(() {
-              isShowUsers = true;
-            });
-          },
         ),
       ),
       body: isShowUsers
-          ? FutureBuilder(
-              future: FirebaseFirestore.instance
+          ? StreamBuilder(
+              stream: FirebaseFirestore.instance
                   .collection('users')
-                  .where('username',
-                      isGreaterThanOrEqualTo: searchController.text)
-                  .get(),
+                  .where(
+                    'username',
+                    isGreaterThanOrEqualTo: searchController.text,
+                  )
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(
@@ -60,12 +56,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     return InkWell(
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) {
-                            return ProfileScreen(
-                              uid: (snapshot.data! as dynamic).docs[index]
-                                  ['uid'],
-                            );
-                          },
+                          builder: (context) => ProfileScreen(
+                            uid: (snapshot.data! as dynamic).docs[index]['uid'],
+                          ),
                         ),
                       ),
                       child: ListTile(
@@ -75,8 +68,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                           radius: 16,
                         ),
-                        title: (snapshot.data! as dynamic).docs[index]
-                            ['username'],
+                        title: Text(
+                          (snapshot.data! as dynamic).docs[index]['username'],
+                        ),
                       ),
                     );
                   },
@@ -106,8 +100,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           (index % 7 == 0) ? 1 : 1, (index % 7 == 0) ? 1 : 1)
                       : StaggeredTile.count(
                           (index % 7 == 0) ? 2 : 1, (index % 7 == 0) ? 2 : 1),
-                  mainAxisSpacing: 4.0,
-                  crossAxisSpacing: 4.0,
+                  mainAxisSpacing: 2.0,
+                  crossAxisSpacing: 2.0,
                 );
               },
             ),
