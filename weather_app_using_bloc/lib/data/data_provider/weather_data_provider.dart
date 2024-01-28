@@ -15,7 +15,7 @@ class WeatherDataProvider {
       // if (data['cod'] != '200') {
       //   throw 'An unexpected error occurred';
       // }
-
+      print(res.body);
       return res.body;
     } catch (e) {
       throw e.toString();
