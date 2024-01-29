@@ -15,6 +15,8 @@ void main() {
   //mock of the abstract repo where usecase lies
   late MockNumberTriviaRepository mockNumberTriviaRepository;
 
+  //To operate with this NumberTriviaRepository instance, the GetConcreteNumberTrivia use case will get it passed in through a constructor.
+  // Tests in Dart have a handy method called setUp which runs before every individual test. This is where we will instantiate the objects.
   setUp(() {
     mockNumberTriviaRepository = MockNumberTriviaRepository();
     usecase = GetConcreteNumberTrivia(mockNumberTriviaRepository);
@@ -29,7 +31,9 @@ void main() {
         .thenAnswer((_) async => Right(tNumberTrivia));
 
     //act
-    final result = await usecase.execute(number: tNumber);
+
+    //usecase.execute or usecase.call( usecase )-same)
+    final result = await usecase(Params(number: tNumber));
 
     //assert
 
