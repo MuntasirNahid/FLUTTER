@@ -19,8 +19,8 @@ class NumberTriviaRepositoryImpl extends NumberTriviaRepository {
 
   @override
   Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(int number) {
-    // TODO: implement getConcreteNumberTrivia
-    throw UnimplementedError();
+    networkInfo.isConnected;
+    return Future.value(Left(ServerFailure()));
   }
 
   @override
