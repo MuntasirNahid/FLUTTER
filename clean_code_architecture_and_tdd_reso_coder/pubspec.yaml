@@ -44,7 +44,8 @@ dependencies:
   #Functional programming thingies
   dartz:
   #Remote api
-  connectivity_plus:
+
+  data_connection_checker_tv: 
   http:
   #Local cache
   shared_preferences:
