@@ -27,7 +27,7 @@ class NumberTriviaPage extends StatelessWidget {
 
   BlocProvider<NumberTriviaBloc> buildBody(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<NumberTriviaBloc>(),
+      create: (context) => service_locator<NumberTriviaBloc>(),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
