@@ -48,7 +48,7 @@ As we have implemented a **layer-based clean code architecture in Flutter**, we 
 
 
 # Diagram:
-[Diagram]('https://drive.google.com/drive/folders/10YjCey8Kw3iPaWWyLHw_WO0la7cYNQuE?usp=sharing')
+[Diagram](https://drive.google.com/drive/folders/10YjCey8Kw3iPaWWyLHw_WO0la7cYNQuE?usp=sharing)
 
 
 # Video Presentation :
