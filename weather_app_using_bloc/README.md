@@ -1,6 +1,6 @@
 <div align="center">
   <h2>AI POWERED Expense Tracker</h2>
-  <img src="https://github.com/MuntasirNahid/EduHOME/assets/69505101/35756655-eb09-4810-9a35-f032d3cde6cb" alt="EduHomeLanding" width="50%" height="40%">
+
 </div>
 
 
