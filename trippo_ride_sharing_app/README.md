@@ -1,16 +1,9 @@
-# trippo_ride_sharing_app
+# Trippo_Ride_Sharing_App
 
-A new Flutter project.
+I attempted to build a ride-sharing app, but I had to discontinue the project midway due to the requirement of a credit card for accessing the Map API.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+![trippo](https://github.com/user-attachments/assets/ad36b4c9-17a1-4b9d-ae62-0877c03650b4)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![trippo2](https://github.com/user-attachments/assets/635972a2-4163-4dd1-8aca-d1723d626a99)
